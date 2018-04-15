@@ -38,9 +38,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DTINYXML2_DEBUG")
 # To build the tests, use cmake . -DBUILD_TESTS:BOOL=ON
 # To disable the building of the tests, use cmake . -DBUILD_TESTS:BOOL=OFF
 
-option(BUILD_SHARED_LIBS "build as shared library" ON)
-option(BUILD_STATIC_LIBS "build as static library" OFF)
-option(BUILD_TESTS "build xmltest (deprecated: Use BUILD_TESTING)" ON)
+option(BUILD_SHARED_LIBS "build as shared library" OFF)
+option(BUILD_STATIC_LIBS "build as static library" ON)
+option(BUILD_TESTS "build xmltest (deprecated: Use BUILD_TESTING)" OFF)
 
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
@@ -74,18 +74,20 @@ else()
 endif()
 
 # export targets for find_package config mode
-export(TARGETS tinyxml2
-      FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake)
-
-install(TARGETS tinyxml2
-        EXPORT ${CMAKE_PROJECT_NAME}Targets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+#export(TARGETS tinyxml2
+#      FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake)
+#
+#install(TARGETS tinyxml2
+#        EXPORT ${CMAKE_PROJECT_NAME}Targets
+#        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 if(BUILD_STATIC_LIBS)
 add_library(tinyxml2_static STATIC tinyxml2.cpp tinyxml2.h)
+set_target_properties(tinyxml2_static PROPERTIES
+                      FOLDER "External/tinyxml2")
 set_target_properties(tinyxml2_static PROPERTIES
         COMPILE_DEFINITONS "TINYXML2_EXPORT"
         VERSION "${GENERIC_LIB_VERSION}"
@@ -111,14 +113,14 @@ else()
 endif()
 
 # export targets for find_package config mode
-export(TARGETS tinyxml2_static
-      FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake)
+#export(TARGETS tinyxml2_static
+#      FILE ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake)
 
-install(TARGETS tinyxml2_static
-        EXPORT ${CMAKE_PROJECT_NAME}Targets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+#install(TARGETS tinyxml2_static
+#        EXPORT ${CMAKE_PROJECT_NAME}Targets
+#        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+#        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
 if(BUILD_TESTING AND BUILD_TESTS)
@@ -150,27 +152,27 @@ foreach(p LIB INCLUDE)
 	endif()
 endforeach()
 
-configure_file(tinyxml2.pc.in tinyxml2.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tinyxml2.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+#configure_file(tinyxml2.pc.in tinyxml2.pc @ONLY)
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tinyxml2.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 
 # uninstall target
-if(NOT TARGET uninstall)
-  configure_file(
-      "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
-      "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-      IMMEDIATE @ONLY)
+#if(NOT TARGET uninstall)
+#  configure_file(
+#      "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
+#      "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+#      IMMEDIATE @ONLY)
+#
+#  add_custom_target(uninstall
+#      COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
+#endif()
 
-  add_custom_target(uninstall
-      COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-endif()
+#file(WRITE
+#    ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+#    "include(\${CMAKE_CURRENT_LIST_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake)\n")
 
-file(WRITE
-    ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-    "include(\${CMAKE_CURRENT_LIST_DIR}/${CMAKE_PROJECT_NAME}Targets.cmake)\n")
-
-install(FILES
-        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
-
-install(EXPORT ${CMAKE_PROJECT_NAME}Targets
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+#install(FILES
+#        ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}Config.cmake
+#        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
+#
+#install(EXPORT ${CMAKE_PROJECT_NAME}Targets
+#        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${CMAKE_PROJECT_NAME})
